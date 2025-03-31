@@ -48,6 +48,7 @@ var votedFor int = -1
 var electionTimer *time.Timer
 var mutex sync.Mutex
 var state string = "follower"
+var numVotes int = 0
 
 // The RequestVote RPC as defined in Raft
 // Hint 1: Use the description in Figure 2 of the paper
@@ -112,6 +113,7 @@ func (node *RaftNode) resetElectionTimer() {
 	min := 5 * time.Second
 	max := 10 * time.Second
 	timerLength := time.Duration(rand.Int63n(max.Nanoseconds()-min.Nanoseconds()) + min.Nanoseconds())
+	fmt.Println("Resetting timer to:", timerLength)
 	electionTimer = time.AfterFunc(timerLength, func() {
 		fmt.Println("Timer Expired. Starting Leader Election ...")
 		node.LeaderElection() // start leader election if timer runs out
@@ -129,42 +131,47 @@ func (node *RaftNode) LeaderElection() {
 	currentTerm++
 	state = "candidate"
 	votedFor = selfID // vote for self
-	numVotes := 1
 	mutex.Unlock()
 
 	// Issues RequestVote RPCS to all other servers
 	for _, server := range serverNodes {
 		arguments := VoteArguments{Term: currentTerm, CandidateID: selfID}
-
+		numVotes = 0
 		fmt.Println("Requesting vote from ", server.serverID, server.Address)
 		go func(server ServerConnection) {
-			reply := VoteReply{}
+			reply := new(VoteReply)
 			err := server.rpcConnection.Call("RaftNode.RequestVote", arguments, &reply)
 			if err != nil {
+				fmt.Println("Error receiving RequestVoteReply:", err)
 				return
 			}
-
+			fmt.Println("Received vote from:", server.serverID, "... reply.ResultVote:", reply.ResultVote)
 			// Take result of the RPC call, and increment number of votes accordingly
 			if reply.ResultVote {
 				mutex.Lock()
 				numVotes++
+				fmt.Println("Received vote from", server.serverID, "... Checking for majority ...")
 				// check if there are enough votes for a majority
 				if 2*numVotes > len(serverNodes) && state == "candidate" { //majority reached
+					fmt.Println("Majority reached")
 					// successfully elected as leader
 					state = "leader"
 					fmt.Println("Successfully elected as leader: ", selfID)
 					electionTimer.Stop() // cancel timer, not a split vote, got majority
-					go node.Heartbeat()  // starts heartbeats, runs forever
+					heartbeat()          // starts heartbeats, runs forever
 				}
 				mutex.Unlock()
 			}
 		}(server)
 	}
+	// Allow time for responses before returning
+	time.Sleep(2 * time.Second)
+	fmt.Println("Election complete, moving forward.")
 }
 
 // You may use this function to help with handling the periodic heartbeats
 // Hint: Use this only if the node is a leader
-func (node *RaftNode) Heartbeat() {
+func heartbeat() {
 	// heartbeatInterval := 50 * time.Millisecond
 	heartbeatInterval := 2 * time.Second
 	for {
@@ -178,9 +185,10 @@ func (node *RaftNode) Heartbeat() {
 
 			fmt.Println("Sending heartbeat to ", server.serverID, server.Address)
 			go func(server ServerConnection) {
-				reply := AppendEntryReply{}
+				reply := new(AppendEntryReply)
 				err := server.rpcConnection.Call("RaftNode.AppendEntry", arguments, &reply)
 				if err != nil {
+					fmt.Println("Error receiving AppendEntry reply")
 					return
 				}
 
