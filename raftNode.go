@@ -110,6 +110,7 @@ func (node *RaftNode) resetElectionTimer() {
 		electionTimer.Stop() // stops existing timer so that only one is running at a time
 	}
 
+	// NOTE: RAFT WOULD USE THESE MILLISECONDS, for testing purposes, our timer will take longer so we can see the logs
 	// min := 150 * time.Millisecond
 	// max := 300 * time.Millisecond
 	min := 5 * time.Second
@@ -166,9 +167,6 @@ func (node *RaftNode) LeaderElection() {
 			}
 		}(server)
 	}
-	// Allow time for responses before returning
-	// time.Sleep(2 * time.Second)
-	// fmt.Println("Election complete, moving forward.")
 }
 
 // You may use this function to help with handling the periodic heartbeats
