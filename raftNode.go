@@ -100,9 +100,11 @@ func (node *RaftNode) AppendEntry(arguments AppendEntryArgument, reply *AppendEn
 	return nil
 }
 
+var mutex2 sync.Mutex
+
 func (node *RaftNode) resetElectionTimer() {
-	mutex.Lock()
-	defer mutex.Unlock()
+	mutex2.Lock()
+	defer mutex2.Unlock()
 
 	if electionTimer != nil {
 		electionTimer.Stop() // stops existing timer so that only one is running at a time
@@ -136,7 +138,7 @@ func (node *RaftNode) LeaderElection() {
 	// Issues RequestVote RPCS to all other servers
 	for _, server := range serverNodes {
 		arguments := VoteArguments{Term: currentTerm, CandidateID: selfID}
-		numVotes = 0
+		numVotes = 1
 		fmt.Println("Requesting vote from ", server.serverID, server.Address)
 		go func(server ServerConnection) {
 			reply := new(VoteReply)
@@ -165,8 +167,8 @@ func (node *RaftNode) LeaderElection() {
 		}(server)
 	}
 	// Allow time for responses before returning
-	time.Sleep(2 * time.Second)
-	fmt.Println("Election complete, moving forward.")
+	// time.Sleep(2 * time.Second)
+	// fmt.Println("Election complete, moving forward.")
 }
 
 // You may use this function to help with handling the periodic heartbeats
@@ -258,7 +260,7 @@ func main() {
 	}
 	rpc.HandleHTTP()
 	go http.ListenAndServe(myPort, nil)
-	log.Printf("serving rpc on port" + myPort)
+	log.Println("serving rpc on port" + myPort)
 
 	// This is a workaround to slow things down until all servers are up and running
 	// Idea: wait for user input to indicate that all servers are ready for connections
