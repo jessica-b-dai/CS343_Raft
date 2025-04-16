@@ -41,6 +41,11 @@ type ServerConnection struct {
 	rpcConnection *rpc.Client
 }
 
+type LogEntry struct {
+	Index int
+	Term  int
+}
+
 var selfID int
 var serverNodes []ServerConnection
 var currentTerm int
@@ -98,6 +103,29 @@ func (node *RaftNode) AppendEntry(arguments AppendEntryArgument, reply *AppendEn
 		node.resetElectionTimer()
 	}
 	return nil
+}
+
+// This function is designed to emulate a client reaching out to the server.
+// Note that many of the realistic details are removed, for simplicity
+func ClientAddToLog() {
+	// In a realistic scenario, the client will find the leader node and communicate with it
+	// In this implementation, we are pretending that the client reached out to the server somehow
+	// But any new log entries will not be created unless the server / node is a leader
+	// isLeader here is a boolean to indicate whether the node is a leader
+	// or not
+	if state == "leader" {
+		// lastAppliedIndex here is an int variable that is needed by a node to store the value of the last index it used in the log
+		entry := LogEntry{lastAppliedIndex, currentTerm}
+		log.Println("Client communication created the new log entry at index " + strconv.Itoa(entry.Index))
+
+		// Add rest of logic here
+		// HINT 1: using the AppendEntry RPC might happen here
+	}
+	// HINT 2: force the thread to sleep for a good amount of time (less
+	// than that of the leader election timer) and then repeat the actions above.
+	// You may use an endless loop here or recursively call the function
+	// HINT 3: you don’t need to add to the logic of creating new log
+	// entries, just handle the replication
 }
 
 var mutex2 sync.Mutex
