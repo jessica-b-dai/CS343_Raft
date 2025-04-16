@@ -331,7 +331,6 @@ func heartbeat() {
 		}
 		//Send heartbeats to all servers
 		for i, server := range serverNodes {
-
 			fmt.Println("Sending heartbeat to ", server.serverID, server.Address)
 			go func(i int, server ServerConnection) {
 				lastLogTerm := -1
