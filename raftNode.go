@@ -16,8 +16,10 @@ import (
 type RaftNode int
 
 type VoteArguments struct {
-	Term        int
-	CandidateID int
+	Term         int
+	CandidateID  int
+	LastLogIndex int // index of candidate's last log entry
+	LastLogTerm  int // term of candidate's last log term
 }
 
 type VoteReply struct {
@@ -26,8 +28,12 @@ type VoteReply struct {
 }
 
 type AppendEntryArgument struct {
-	Term     int
-	LeaderID int
+	Term         int
+	LeaderID     int
+	prevLogIndex int
+	prevLogTerm  int
+	entries      []LogEntry
+	leaderCommit int
 }
 
 type AppendEntryReply struct {
@@ -54,6 +60,13 @@ var electionTimer *time.Timer
 var mutex sync.Mutex
 var state string = "follower"
 var numVotes int = 0
+var commitIndex int = 0
+var lastApplied int = 0
+var logs []LogEntry = []LogEntry{}
+
+// for leader node to keep track of other server nodes
+var nextIndex []int
+var matchIndex []int
 
 // The RequestVote RPC as defined in Raft
 // Hint 1: Use the description in Figure 2 of the paper
@@ -69,13 +82,19 @@ func (node *RaftNode) RequestVote(arguments VoteArguments, reply *VoteReply) err
 		currentTerm = arguments.Term // update own term
 		votedFor = -1                // New term, so initializing votedFor to be -1
 		// Log recency check here - not implemented
-		// May want to choose a different leader
-		votedFor = arguments.CandidateID
-		reply.ResultVote = true
-		reply.Term = arguments.Term
-		state = "follower" // change our state to follower, in case we were a leader that blipped and came back
-		fmt.Println("Voted for", votedFor)
-		node.resetElectionTimer()
+		if arguments.LastLogIndex >= lastApplied {
+			// they are as up to date as our log, grant vote
+			votedFor = arguments.CandidateID
+			reply.ResultVote = true
+			reply.Term = arguments.Term
+			state = "follower" // change our state to follower, in case we were a leader that blipped and came back
+			fmt.Println("Voted for", votedFor)
+			node.resetElectionTimer()
+		} else {
+			// they are not as up to date as our log, reject.
+			reply.ResultVote = false
+			reply.Term = currentTerm
+		}
 	} else { // If the requester's term is less than our own, automatic reject.
 		reply.ResultVote = false
 		reply.Term = currentTerm
@@ -90,18 +109,37 @@ func (node *RaftNode) AppendEntry(arguments AppendEntryArgument, reply *AppendEn
 	fmt.Println("Received Heartbeat from", arguments.LeaderID, "|| term:", arguments.Term)
 	mutex.Lock()
 	defer mutex.Unlock()
-	if arguments.Term < currentTerm { // not our leader, leader of lower term.
+	if (arguments.Term < currentTerm) || (len(logs) < arguments.prevLogIndex) {
+		// not our leader, leader of lower term
+		// or, we are not caught up to the leader's log (missing term)
 		reply.Success = false
-		reply.Term = currentTerm
-	} else {
+	} else if logs[arguments.prevLogIndex].Term != arguments.prevLogTerm { // wrong term
+		reply.Success = false
+		// replies false, since something is wrong with what we have previously appended
+		// since we cnanot continue adding logs with a mistake in our log, we clear out the rest of our log
+		// and wait for the leader to catch us up on the correct previologs
+		for index, _ := range logs[arguments.prevLogIndex:] {
+			logs[index] = LogEntry{Index: -1, Term: -1}
+		}
+	} else { // everything in check
 		fmt.Println("Responded to", arguments.LeaderID)
 		// respond to our leader
 		reply.Success = true
 		currentTerm = arguments.Term
-		reply.Term = currentTerm
+		// append any new entries not already in the log
+		commitIndex += len(arguments.entries)
+		for _, entry := range arguments.entries {
+			logs = append(logs, entry) // irl would apply an operation on state machines
+			lastApplied++              // updates the last applied after applying each new entry
+		}
+		// check/update our commit index accordingly
+		if arguments.leaderCommit > commitIndex {
+			commitIndex = min(arguments.leaderCommit, lastApplied)
+		}
 		// reset timer
 		node.resetElectionTimer()
 	}
+	reply.Term = currentTerm
 	return nil
 }
 
@@ -115,11 +153,38 @@ func ClientAddToLog() {
 	// or not
 	if state == "leader" {
 		// lastAppliedIndex here is an int variable that is needed by a node to store the value of the last index it used in the log
-		entry := LogEntry{lastAppliedIndex, currentTerm}
+		entry := LogEntry{lastApplied, currentTerm}
 		log.Println("Client communication created the new log entry at index " + strconv.Itoa(entry.Index))
 
-		// Add rest of logic here
 		// HINT 1: using the AppendEntry RPC might happen here
+		for i, server := range serverNodes {
+			// send out AppendEntryArgument to all server nodes in threads, so that if one of the nodes is
+			// behind, the other server nodes can still receive the log without waiting
+			arguments := AppendEntryArgument{
+				Term:         currentTerm,
+				LeaderID:     selfID,
+				prevLogIndex: nextIndex[i-1],    // last log index from this specific server node
+				prevLogTerm:  logs[i-1].Term,    // term of the last index in the leader's log
+				entries:      []LogEntry{entry}, // sends newest entry
+				leaderCommit: commitIndex,       // leader's commit index
+			}
+
+			fmt.Println("Sending new entry to ", server.serverID, server.Address)
+			go func(server ServerConnection) {
+				reply := new(AppendEntryReply)
+				err := server.rpcConnection.Call("RaftNode.AppendEntry", arguments, &reply)
+				if err != nil {
+					fmt.Println("Error receiving AppendEntry reply")
+					return
+				}
+
+				// Step down as leader if it seems that other nodes have a higher term
+				if reply.Term > currentTerm {
+					state = "follower"
+				}
+				// NOT DONE YET: LOGIC FOR IF REPLY IS FAILURE
+			}(server)
+		}
 	}
 	// HINT 2: force the thread to sleep for a good amount of time (less
 	// than that of the leader election timer) and then repeat the actions above.
@@ -166,7 +231,13 @@ func (node *RaftNode) LeaderElection() {
 
 	// Issues RequestVote RPCS to all other servers
 	for _, server := range serverNodes {
-		arguments := VoteArguments{Term: currentTerm, CandidateID: selfID}
+		arguments := VoteArguments{
+			Term:         currentTerm,
+			CandidateID:  selfID,
+			LastLogIndex: lastApplied,
+			LastLogTerm:  logs[lastApplied].Term,
+		}
+
 		numVotes = 1
 		fmt.Println("Requesting vote from ", server.serverID, server.Address)
 		go func(server ServerConnection) {
@@ -189,7 +260,14 @@ func (node *RaftNode) LeaderElection() {
 					state = "leader"
 					fmt.Println("Successfully elected as leader: ", selfID)
 					electionTimer.Stop() // cancel timer, not a split vote, got majority
-					heartbeat()          // starts heartbeats, runs forever
+					// Initialize leader arrays to keep track of server indexes
+					nextIndex = make([]int, len(serverNodes))
+					for i, _ := range nextIndex {
+						nextIndex[i] = commitIndex + 1
+					}
+					matchIndex = make([]int, len(serverNodes))
+
+					heartbeat() // starts heartbeats, runs forever
 				}
 				mutex.Unlock()
 			}
@@ -208,8 +286,15 @@ func heartbeat() {
 			return
 		}
 		//Send heartbeats to all servers
-		for _, server := range serverNodes {
-			arguments := AppendEntryArgument{Term: currentTerm, LeaderID: selfID}
+		for i, server := range serverNodes {
+			arguments := AppendEntryArgument{
+				Term:         currentTerm,
+				LeaderID:     selfID,
+				prevLogIndex: nextIndex[i-1], // last log index from this specific server node
+				prevLogTerm:  logs[i-1].Term, // term of the last index in the leader's log
+				entries:      []LogEntry{},   // sends an empty entires log for heartbeats
+				leaderCommit: commitIndex,    // leader's commit index
+			}
 
 			fmt.Println("Sending heartbeat to ", server.serverID, server.Address)
 			go func(server ServerConnection) {
