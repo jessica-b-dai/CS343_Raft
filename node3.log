@@ -1,0 +1,206 @@
+2025/04/16 19:16:13 localhost:4040%!(EXTRA int=0)
+2025/04/16 19:16:13 localhost:4041%!(EXTRA int=1)
+2025/04/16 19:16:13 localhost:4042%!(EXTRA int=2)
+2025/04/16 19:16:13 localhost:4043%!(EXTRA int=3)
+2025/04/16 19:16:13 localhost:4044%!(EXTRA int=4)
+2025/04/16 19:16:13 serving rpc on portlocalhost:4043
+Connected to localhost:4040
+Connected to localhost:4041
+Connected to localhost:4042
+Connected to localhost:4044
+Resetting timer to: 6.558445691s
+Timer Expired. Starting Leader Election ...
+Starting leader election from node  3
+Resetting timer to: 6.855891628s
+Requesting vote from  0 localhost:4040
+Requesting vote from  1 localhost:4041
+Requesting vote from  2 localhost:4042
+Requesting vote from  3 localhost:4044
+Received vote from: 0 ... reply.ResultVote: true
+Received vote from 0 ... Checking for majority ...
+Received vote from: 3 ... reply.ResultVote: true
+Received vote from 3 ... Checking for majority ...
+Majority reached for leader election
+Successfully elected as leader:  3
+Simulating client request
+Client communication created the new log entry at index 0
+Received vote from: 2 ... reply.ResultVote: true
+Received vote from 2 ... Checking for majority ...
+Sending new entry to  3 localhost:4044
+Sending new entry to  1 localhost:4041
+Received vote from: 1 ... reply.ResultVote: true
+Received vote from 1 ... Checking for majority ...
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending new entry to  2 localhost:4042
+Sending heartbeat to  2 localhost:4042
+Sending new entry to  0 localhost:4040
+Sending heartbeat to  3 localhost:4044
+Received response from 1 ... Checking for majority ...
+Received response from 3 ... Checking for majority ...
+Majority reached for new log commit
+Received response from 0 ... Checking for majority ...
+Received response from 2 ... Checking for majority ...
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Simulating client request
+Client communication created the new log entry at index 1
+Sending new entry to  0 localhost:4040
+Sending new entry to  3 localhost:4044
+Sending new entry to  1 localhost:4041
+Sending new entry to  2 localhost:4042
+Received response from 3 ... Checking for majority ...
+Received response from 1 ... Checking for majority ...
+Majority reached for new log commit
+Received response from 0 ... Checking for majority ...
+Received response from 2 ... Checking for majority ...
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Simulating client request
+Client communication created the new log entry at index 2
+Sending new entry to  3 localhost:4044
+Sending new entry to  1 localhost:4041
+Sending new entry to  2 localhost:4042
+Sending new entry to  0 localhost:4040
+Received response from 2 ... Checking for majority ...
+Received response from 1 ... Checking for majority ...
+Majority reached for new log commit
+Received response from 3 ... Checking for majority ...
+Received response from 0 ... Checking for majority ...
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Simulating client request
+Client communication created the new log entry at index 3
+Sending new entry to  1 localhost:4041
+Sending new entry to  3 localhost:4044
+Sending new entry to  0 localhost:4040
+Sending new entry to  2 localhost:4042
+Received response from 0 ... Checking for majority ...
+Received response from 1 ... Checking for majority ...
+Majority reached for new log commit
+Received response from 3 ... Checking for majority ...
+Received response from 2 ... Checking for majority ...
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Simulating client request
+Client communication created the new log entry at index 4
+Sending new entry to  3 localhost:4044
+Sending new entry to  0 localhost:4040
+Sending new entry to  2 localhost:4042
+Sending new entry to  1 localhost:4041
+Received response from 3 ... Checking for majority ...
+Received response from 2 ... Checking for majority ...
+Majority reached for new log commit
+Received response from 1 ... Checking for majority ...
+Received response from 0 ... Checking for majority ...
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Simulating client request
+Client communication created the new log entry at index 5
+Sending new entry to  3 localhost:4044
+Sending new entry to  2 localhost:4042
+Sending new entry to  1 localhost:4041
+Sending new entry to  0 localhost:4040
+Received response from 3 ... Checking for majority ...
+Received response from 2 ... Checking for majority ...
+Majority reached for new log commit
+Received response from 1 ... Checking for majority ...
+Received response from 0 ... Checking for majority ...
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044
+Sending heartbeat to  0 localhost:4040
+Sending heartbeat to  1 localhost:4041
+Sending heartbeat to  2 localhost:4042
+Sending heartbeat to  3 localhost:4044

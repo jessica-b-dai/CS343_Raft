@@ -1,0 +1,122 @@
+2025/04/16 19:16:13 localhost:4040%!(EXTRA int=0)
+2025/04/16 19:16:13 localhost:4041%!(EXTRA int=1)
+2025/04/16 19:16:13 localhost:4042%!(EXTRA int=2)
+2025/04/16 19:16:13 localhost:4043%!(EXTRA int=3)
+2025/04/16 19:16:13 localhost:4044%!(EXTRA int=4)
+2025/04/16 19:16:13 serving rpc on portlocalhost:4044
+Connected to localhost:4040
+Connected to localhost:4041
+Connected to localhost:4042
+Connected to localhost:4043
+Resetting timer to: 9.778101462s
+Received vote request from 3 || term: 1
+Voted for 3
+Resetting timer to: 6.199200561s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 7.144579425s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Added new entry to log in index. Last applied index: 0
+Resetting timer to: 5.047787243s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 9.429331024s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 7.047388475s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 9.642365378s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 6.717758973s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Added new entry to log in index. Last applied index: 1
+Resetting timer to: 9.969512612s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 7.514106222s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 5.776060697s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 6.323706541s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 9.85203264s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 7.810625629s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Added new entry to log in index. Last applied index: 2
+Resetting timer to: 6.062665194s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 5.863665093s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 8.727244691s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 6.663476425s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 9.176658249s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 6.874123031s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Added new entry to log in index. Last applied index: 3
+Resetting timer to: 9.615327583s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 5.056048555s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 6.757048861s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 9.349096456s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 6.863628709s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 5.830049999s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Added new entry to log in index. Last applied index: 4
+Resetting timer to: 5.507962882s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 5.413508949s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 6.131520238s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 5.116407624s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 7.081529021s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 6.452207041s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Added new entry to log in index. Last applied index: 5
+Resetting timer to: 5.485056235s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 7.412702546s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 7.998915633s
+Received AppendEntry from 3 || term: 1
+Responded to AppendEntry argument from  3
+Resetting timer to: 8.037640992s
